@@ -1,14 +1,83 @@
+#!/bin/bash
+
+# Prepare
+
 cd ../
 docker build . -t camunda-benchmarker
 runninginstance=$(docker ps | grep camunda-benchmarker | awk '{print $1;}')
 docker stop $runninginstance
+sleep 1
 rm experiment-results/*
 cd experiment-agent
 
-docker run -d -p 3500:8080 camunda-benchmarker
+
+# # Java Class
+
+# docker run -d -p 3500:8080 camunda-benchmarker &> /dev/null
+# sleep 5
+# curl http://localhost:3500 &> /dev/null # only returns when camunda platform is ready
+# echo Camunda Platform docker container running
+# node runner.js  "basic-java-class" 1 1000 60
+# runninginstance=$(docker ps | grep camunda-benchmarker | awk '{print $1;}')
+# docker stop $runninginstance
+# sleep 1
+
+# docker run -d -p 3500:8080 camunda-benchmarker &> /dev/null
+# sleep 5
+# curl http://localhost:3500 &> /dev/null # only returns when camunda platform is ready
+# echo Camunda Platform docker container running
+# node runner.js  "basic-java-class" 10 1000 60
+# runninginstance=$(docker ps | grep camunda-benchmarker | awk '{print $1;}')
+# docker stop $runninginstance
+# sleep 1
+
+# docker run -d -p 3500:8080 camunda-benchmarker &> /dev/null
+# sleep 5
+# curl http://localhost:3500 &> /dev/null # only returns when camunda platform is ready
+# echo Camunda Platform docker container running
+# node runner.js  "basic-java-class" 100 1000 60
+# runninginstance=$(docker ps | grep camunda-benchmarker | awk '{print $1;}')
+# docker stop $runninginstance
+# sleep 1
+
+# docker run -d -p 3500:8080 camunda-benchmarker &> /dev/null
+# sleep 5
+# curl http://localhost:3500 &> /dev/null # only returns when camunda platform is ready
+# echo Camunda Platform docker container running
+# node runner.js  "advanced-java-class" 1 1000 60
+# runninginstance=$(docker ps | grep camunda-benchmarker | awk '{print $1;}')
+# docker stop $runninginstance
+# sleep 1
+
+# docker run -d -p 3500:8080 camunda-benchmarker &> /dev/null
+# sleep 5
+# curl http://localhost:3500 &> /dev/null # only returns when camunda platform is ready
+# echo Camunda Platform docker container running
+# node runner.js  "advanced-java-class" 10 1000 60
+# runninginstance=$(docker ps | grep camunda-benchmarker | awk '{print $1;}')
+# docker stop $runninginstance
+# sleep 1
+
+# docker run -d -p 3500:8080 camunda-benchmarker &> /dev/null
+# sleep 5
+# curl http://localhost:3500 &> /dev/null # only returns when camunda platform is ready
+# echo Camunda Platform docker container running
+# node runner.js  "advanced-java-class" 100 1000 60
+# runninginstance=$(docker ps | grep camunda-benchmarker | awk '{print $1;}')
+# docker stop $runninginstance
+# sleep 1
+
+
+# Node Task Client
+
+docker run -d -p 3500:8080 camunda-benchmarker &> /dev/null
 sleep 5
 curl http://localhost:3500 &> /dev/null # only returns when camunda platform is ready
 echo Camunda Platform docker container running
-node runner.js  "basic-java-class" 1 1000 6
+node ../task-client-node &
+sleep 1
+node runner.js  "basic-node-task-client" 1 1000 60
+ps -ef | grep "task-client-node" | awk '{print $2}' | xargs -L1 kill
 runninginstance=$(docker ps | grep camunda-benchmarker | awk '{print $1;}')
 docker stop $runninginstance
+sleep 1

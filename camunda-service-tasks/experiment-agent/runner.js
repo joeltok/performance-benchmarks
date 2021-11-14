@@ -20,14 +20,20 @@ function sleep (timeout) {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-function startProcess () {
-  return axios({
-    method: 'POST',
-    url: `http://localhost:3500/engine-rest/process-definition/key/${processDefinitionKey}/start`,
-    headers: {
-      'content-type': 'application/json'
-    }
-  })
+async function startProcess (repetitionNumber, concurrentNumber) {
+  try {
+    await axios({
+      method: 'POST',
+      url: `http://localhost:3500/engine-rest/process-definition/key/${processDefinitionKey}/start`,
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+  } catch (err) {
+    // if failure, retry
+    startProcess(repetitionNumber, concurrentNumber)
+  }
+
 }
 
 function getProcessesData () {
@@ -39,26 +45,29 @@ function getProcessesData () {
 
 function perRepetition () {
   console.log(`Repetition ${++repetitionNumber}`)
-  for (var i = 0; i < concurrent; i++) {
-    startProcess()
+  for (var n = 1; n <= concurrent; n++) {
+    const concurrentNumber = n
+    setTimeout(() => {
+      startProcess(repetitionNumber, concurrentNumber)
+    }, n / interval)
   }
 }
 
 async function run() {
   // fire all necessary calls
   for (var i = 0; i < repetition; i++) {
-    setTimeout(perRepetition, interval * (i-1))
+    setTimeout(perRepetition, interval * i)
   }
 
   // poll for completion
   const totalProcesses = concurrent * repetition
-  await sleep(interval * (repetition-1))
-  
+  await sleep(interval * repetition)
+
   let processesData = await getProcessesData()
   while (processesData.data.length < totalProcesses) {
-    await sleep(1000)
-    console.log('waiting for completion...')
     processesData = await getProcessesData()
+    await sleep(1000)
+    console.log(`${new Date()} Waiting for completion... ${processesData.data.length} / ${totalProcesses}`)
   }
 
   const results = {
