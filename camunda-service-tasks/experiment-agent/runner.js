@@ -5,6 +5,7 @@ const processDefinitionKey = process.argv[2]
 const concurrent = process.argv[3]
 const interval = process.argv[4]
 const repetition = process.argv[5]
+const filenameAppend = process.argv[6]
 
 let repetitionNumber = 0
 
@@ -53,6 +54,10 @@ function perRepetition () {
   }
 }
 
+function countCompleted(processesData) {
+  return processesData.data.filter(datum => datum.endTime !== null).length
+}
+
 async function run() {
   // fire all necessary calls
   for (var i = 0; i < repetition; i++) {
@@ -64,10 +69,14 @@ async function run() {
   await sleep(interval * repetition)
 
   let processesData = await getProcessesData()
-  while (processesData.data.length < totalProcesses) {
+  let completedCount = countCompleted(processesData)
+  let allCompleted = completedCount === totalProcesses
+  while (!allCompleted) {
+    await sleep(5000)
     processesData = await getProcessesData()
-    await sleep(1000)
-    console.log(`${new Date()} Waiting for completion... ${processesData.data.length} / ${totalProcesses}`)
+    completedCount = countCompleted(processesData)
+    allCompleted = completedCount === totalProcesses
+    console.log(`${new Date()} Waiting for completion... ${completedCount} / ${totalProcesses}`)
   }
 
   const results = {
@@ -78,7 +87,7 @@ async function run() {
     processesData: processesData.data,
   }  
 
-  const filename = `${processDefinitionKey}-${concurrent}-${interval}-${repetition}`
+  const filename = `${processDefinitionKey}-${concurrent}-${interval}-${repetition}` + (filenameAppend ? `-${filenameAppend}` : '')
   fs.writeFileSync(`../experiment-results/${filename}.json`, JSON.stringify(results, null, 2), 'utf8');
   console.log('done.')
 }

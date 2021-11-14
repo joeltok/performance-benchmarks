@@ -1,0 +1,9 @@
+{
+  "name": "task-client-node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "camunda-external-task-client-js": "^2.1.1"
+  }
+}
