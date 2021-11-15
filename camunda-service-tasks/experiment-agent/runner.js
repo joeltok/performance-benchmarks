@@ -8,6 +8,7 @@ const repetition = process.argv[5]
 const filenameAppend = process.argv[6]
 
 let repetitionNumber = 0
+let numFailures = 0
 
 console.log(`
 Run with parameters: 
@@ -32,6 +33,7 @@ async function startProcess (repetitionNumber, concurrentNumber) {
     })
   } catch (err) {
     // if failure, retry
+    numFailures++
     startProcess(repetitionNumber, concurrentNumber)
   }
 
@@ -79,15 +81,18 @@ async function run() {
     console.log(`${new Date()} Waiting for completion... ${completedCount} / ${totalProcesses}`)
   }
 
+  const tag = processDefinitionKey + (filenameAppend ? `-${filenameAppend}` : '')
   const results = {
+    tag,
     processDefinitionKey,
     concurrent,
     interval,
     repetition,
+    numFailures,
     processesData: processesData.data,
   }  
 
-  const filename = `${processDefinitionKey}-${concurrent}-${interval}-${repetition}` + (filenameAppend ? `-${filenameAppend}` : '')
+  const filename = `${tag}-${concurrent}-${interval}-${repetition}` 
   fs.writeFileSync(`../experiment-results/${filename}.json`, JSON.stringify(results, null, 2), 'utf8');
   console.log('done.')
 }

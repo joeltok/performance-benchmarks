@@ -24,11 +24,19 @@ The experiment variables are outlined in this blog post [here](https://joeltok.c
 - Maven clean
 - Maven build
 
-### Install modules for agent and respective task clients
+### Install modules for agent, respective task clients and results analysis
 
 - `cd experiment-agent && yarn`
 - `cd task-client-node && yarn`
-- `cd task-client-python` and `python3 -m venv ./venv` and `pip3 install camunda-external-task-client-python3==4.0.0`
+- `cd task-client-python`
+  `python3 -m venv ./venv`
+  `source venv/bin/activate`
+  `pip3 install camunda-external-task-client-python3==4.0.0`
+  `pip3 install pandas==1.3.4`
+- `cd results-analysis`
+  `python3 -m venv ./venv` 
+  `source venv/bin/activate`
+  `pip3 install matplotlib==3.4.3`
 
 ### Clean build and installation of the customised docker image for each iteration
 
