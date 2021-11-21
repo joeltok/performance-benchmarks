@@ -37,6 +37,7 @@ The experiment variables are outlined in this blog post [here](https://joeltok.c
   `python3 -m venv ./venv` 
   `source venv/bin/activate`
   `pip3 install matplotlib==3.4.3`
+  `pip3 install jupyterlab==3.2.3`
 
 ### Clean build and installation of the customised docker image for each iteration
 
@@ -46,3 +47,5 @@ The experiment variables are outlined in this blog post [here](https://joeltok.c
 ### Run experiment
 
 The experiment coordinator is found in `experiment-agent/coordinator.sh`. This is a bash file that handles spinning up and cleaning the docker container housing the Camunda Platform, as well as runs the performance test runner `experiment-agent/runner.js` for each iteration of the experiment. 
+
+The data is analysed in the `results-analysis/analysis.ipynb` jupyter notebook. 

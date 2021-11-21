@@ -1,2 +1,6 @@
-experiment-results*/
+venv/
+experiment-results/
 results-analysis/*.png
+boxplots/
+
+.ipynb_checkpoints
