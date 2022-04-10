@@ -1,0 +1,6 @@
+FROM maven:3.3.9-jdk-8-alpine AS camunda-build
+COPY camunda/bpmnservlet /bpmnservlet
+RUN mvn -f /bpmnservlet clean package -DskipTests
+
+FROM camunda/camunda-bpm-platform:latest
+COPY --from=camunda-build bpmnservlet/target/bpmnservlet.war /camunda/webapps/

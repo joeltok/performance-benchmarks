@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1cogk1t" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="camunda-process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${execution.setVariable(&#39;sum&#39;, 0)}" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_0ldkz9u</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0ldkz9u" sourceRef="StartEvent_1" targetRef="wait-for-event" />
+    <bpmn:intermediateCatchEvent id="wait-for-event" name="Wait for Event">
+      <bpmn:incoming>Flow_0ldkz9u</bpmn:incoming>
+      <bpmn:incoming>Flow_0dbirr8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0m5hax3</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1w3j6va" messageRef="Message_1nnesww" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_0m5hax3" sourceRef="wait-for-event" targetRef="summation" />
+    <bpmn:serviceTask id="summation" name="Summation" camunda:expression="${sum + val}" camunda:resultVariable="sum">
+      <bpmn:incoming>Flow_0m5hax3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0b390ed</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="decision" name="Decision">
+      <bpmn:incoming>Flow_0b390ed</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pxaply</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0dbirr8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0b390ed" sourceRef="summation" targetRef="decision" />
+    <bpmn:endEvent id="Event_0yvjn2s">
+      <bpmn:incoming>Flow_0pxaply</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0pxaply" name="if == eventsPerProcess" sourceRef="decision" targetRef="Event_0yvjn2s">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{sum == eventsPerProcess}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0dbirr8" name="if &#60; eventsPerProcess" sourceRef="decision" targetRef="wait-for-event">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{sum &lt; eventsPerProcess}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmn:message id="Message_1nnesww" name="wait-for-event" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="camunda-process">
+      <bpmndi:BPMNEdge id="Flow_0dbirr8_di" bpmnElement="Flow_0dbirr8">
+        <di:waypoint x="860" y="202" />
+        <di:waypoint x="860" y="120" />
+        <di:waypoint x="390" y="120" />
+        <di:waypoint x="390" y="209" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="581" y="86" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pxaply_di" bpmnElement="Flow_0pxaply">
+        <di:waypoint x="885" y="227" />
+        <di:waypoint x="1052" y="227" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="924" y="196" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b390ed_di" bpmnElement="Flow_0b390ed">
+        <di:waypoint x="670" y="227" />
+        <di:waypoint x="835" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0m5hax3_di" bpmnElement="Flow_0m5hax3">
+        <di:waypoint x="408" y="227" />
+        <di:waypoint x="570" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ldkz9u_di" bpmnElement="Flow_0ldkz9u">
+        <di:waypoint x="215" y="227" />
+        <di:waypoint x="372" y="227" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1adhgsa_di" bpmnElement="wait-for-event">
+        <dc:Bounds x="372" y="209" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="356" y="252" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1f3e43y_di" bpmnElement="decision" isMarkerVisible="true">
+        <dc:Bounds x="835" y="202" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="839" y="259" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0yvjn2s_di" bpmnElement="Event_0yvjn2s">
+        <dc:Bounds x="1052" y="209" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h4tl59_di" bpmnElement="summation">
+        <dc:Bounds x="570" y="187" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
