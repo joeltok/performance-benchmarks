@@ -5,8 +5,8 @@
       <bpmn:extensionElements />
       <bpmn:outgoing>Flow_1sh199k</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_1sh199k" sourceRef="StartEvent_1" targetRef="Event_17qbp6i" />
-    <bpmn:sequenceFlow id="Flow_1kcm5cw" sourceRef="Event_17qbp6i" targetRef="Gateway_1s9xea3" />
+    <bpmn:sequenceFlow id="Flow_1sh199k" sourceRef="StartEvent_1" targetRef="wait-for-event" />
+    <bpmn:sequenceFlow id="Flow_1kcm5cw" sourceRef="wait-for-event" targetRef="Gateway_1s9xea3" />
     <bpmn:exclusiveGateway id="Gateway_1s9xea3">
       <bpmn:incoming>Flow_1kcm5cw</bpmn:incoming>
       <bpmn:outgoing>Flow_114gykh</bpmn:outgoing>
@@ -18,10 +18,10 @@
     <bpmn:sequenceFlow id="Flow_114gykh" name="val == eventsPerProcess" sourceRef="Gateway_1s9xea3" targetRef="Activity_023sfbu">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= val = eventsPerProcess</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_100p22n" name="val &#60; eventsPerProcess" sourceRef="Gateway_1s9xea3" targetRef="Event_17qbp6i">
+    <bpmn:sequenceFlow id="Flow_100p22n" name="val &#60; eventsPerProcess" sourceRef="Gateway_1s9xea3" targetRef="wait-for-event">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= val &lt; eventsPerProcess</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:intermediateCatchEvent id="Event_17qbp6i">
+    <bpmn:intermediateCatchEvent id="wait-for-event" name="Wait for Event">
       <bpmn:incoming>Flow_1sh199k</bpmn:incoming>
       <bpmn:incoming>Flow_100p22n</bpmn:incoming>
       <bpmn:outgoing>Flow_1kcm5cw</bpmn:outgoing>
@@ -74,8 +74,11 @@
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="152" y="232" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1ajebax_di" bpmnElement="Event_17qbp6i">
+      <bpmndi:BPMNShape id="Event_1ajebax_di" bpmnElement="wait-for-event">
         <dc:Bounds x="332" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="316" y="275" width="69" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1s9xea3_di" bpmnElement="Gateway_1s9xea3" isMarkerVisible="true">
         <dc:Bounds x="595" y="225" width="50" height="50" />
